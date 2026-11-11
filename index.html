@@ -57,9 +57,17 @@
             padding: 1rem 0;
         }
 
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
         .logo-img {
-            max-height: 70px;
-            filter: drop-shadow(0 0 10px rgba(242, 20, 20, 0.5));
+            height: 75px;
+            width: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 0 12px rgba(242, 20, 20, 0.7));
         }
 
         .hero {
@@ -69,14 +77,14 @@
 
         h1 {
             font-family: 'Orbitron', sans-serif;
-            font-size: 3.5rem;
+            font-size: 3.8rem;
             font-weight: 900;
             text-transform: uppercase;
             background: linear-gradient(135deg, #FFFFFF 0%, var(--naranja-propulsion) 50%, var(--rojo-eclipse) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 1rem;
-            text-shadow: 0 0 20px rgba(242, 20, 20, 0.3);
+            text-shadow: 0 0 25px rgba(242, 20, 20, 0.4);
         }
 
         .quote {
@@ -89,6 +97,7 @@
             margin-right: auto;
             border-left: 4px solid var(--rojo-eclipse);
             padding-left: 1rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
         }
 
         /* Reloj futurista */
@@ -110,27 +119,27 @@
         }
 
         .time-box {
-            background: rgba(11, 11, 16, 0.7);
+            background: rgba(11, 11, 16, 0.85);
             border: 2px solid var(--rojo-eclipse);
-            box-shadow: 0 0 15px rgba(242, 20, 20, 0.4), inset 0 0 15px rgba(255, 106, 26, 0.2);
-            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(242, 20, 20, 0.5), inset 0 0 15px rgba(255, 106, 26, 0.3);
+            border-radius: 14px;
             padding: 1.5rem;
-            min-width: 120px;
-            backdrop-filter: blur(5px);
-            transition: transform 0.3s ease;
+            min-width: 125px;
+            backdrop-filter: blur(8px);
+            transition: transform 0.3s ease, border-color 0.3s ease;
         }
 
         .time-box:hover {
-            transform: translateY(-5px);
+            transform: translateY(-6px);
             border-color: var(--naranja-propulsion);
         }
 
         .number {
             font-family: 'Orbitron', sans-serif;
-            font-size: 3rem;
+            font-size: 3.2rem;
             font-weight: 700;
             color: #FFFFFF;
-            text-shadow: 0 0 10px var(--naranja-propulsion);
+            text-shadow: 0 0 12px var(--naranja-propulsion);
         }
 
         .label {
@@ -152,7 +161,7 @@
             font-weight: bold;
             border-radius: 50px;
             cursor: pointer;
-            box-shadow: 0 0 20px rgba(255, 106, 26, 0.6);
+            box-shadow: 0 0 25px rgba(255, 106, 26, 0.7);
             transition: all 0.3s ease;
             display: inline-flex;
             align-items: center;
@@ -160,8 +169,8 @@
         }
 
         .audio-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 30px rgba(242, 20, 20, 0.8);
+            transform: scale(1.06);
+            box-shadow: 0 0 35px rgba(242, 20, 20, 0.9);
         }
 
         footer {
@@ -181,9 +190,14 @@
 
     <div class="container">
         <header>
-            <img src="logo-principal.png" alt="Eclipse Team 3 Logo" class="logo-img">
+            <div class="logo-container">
+                <img src="Logo principal.png" 
+                     onerror="this.onerror=null; this.src='';" 
+                     alt="Eclipse Team 3 Logo" 
+                     class="logo-img">
+            </div>
             <button class="audio-btn" id="audioToggle">
-                🔊 SONIDO DE PROPULSIÓN
+                🚀 ACTIVAR PROPULSIÓN HYPER-SOUND
             </button>
         </header>
 
@@ -230,14 +244,14 @@
         window.addEventListener('resize', resizeCanvas);
 
         // Estrellas de fondo
-        const stars = Array.from({ length: 150 }, () => ({
+        const stars = Array.from({ length: 180 }, () => ({
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
-            size: Math.random() * 2,
+            size: Math.random() * 2.2,
             alpha: Math.random()
         }));
 
-        // Cohetes en movimiento
+        // Cohetes en movimiento continuo
         class Rocket {
             constructor() {
                 this.reset();
@@ -245,16 +259,16 @@
 
             reset() {
                 this.x = Math.random() * canvas.width;
-                this.y = canvas.height + 50 + Math.random() * 200;
-                this.speed = 2 + Math.random() * 3;
-                this.size = 15 + Math.random() * 15;
-                this.angle = -Math.PI / 2 + (Math.random() - 0.5) * 0.2; // Ascenso vertical con ligera inclinación
+                this.y = canvas.height + 60 + Math.random() * 200;
+                this.speed = 2.5 + Math.random() * 3.5;
+                this.size = 18 + Math.random() * 14;
+                this.angle = -Math.PI / 2 + (Math.random() - 0.5) * 0.15;
             }
 
             update() {
                 this.y -= this.speed;
-                this.x += Math.sin(this.y * 0.01) * 0.5;
-                if (this.y < -50) {
+                this.x += Math.sin(this.y * 0.008) * 0.6;
+                if (this.y < -80) {
                     this.reset();
                 }
             }
@@ -264,42 +278,42 @@
                 ctx.translate(this.x, this.y);
                 ctx.rotate(this.angle + Math.PI / 2);
 
-                // Estela / Fuego de propulsión (#FF6A1A y #F21414)
-                let gradient = ctx.createLinearGradient(0, 0, 0, this.size * 2);
+                // Estela / Fuego de propulsión oficial (#FF6A1A y #F21414)
+                let gradient = ctx.createLinearGradient(0, 0, 0, this.size * 2.5);
                 gradient.addColorStop(0, '#FF6A1A');
-                gradient.addColorStop(0.5, '#F21414');
+                gradient.addColorStop(0.4, '#F21414');
                 gradient.addColorStop(1, 'transparent');
 
                 ctx.fillStyle = gradient;
                 ctx.beginPath();
                 ctx.moveTo(-this.size / 3, 0);
                 ctx.lineTo(this.size / 3, 0);
-                ctx.lineTo(0, this.size * 2 + Math.random() * 10);
+                ctx.lineTo(0, this.size * 2.5 + Math.random() * 12);
                 ctx.closePath();
                 ctx.fill();
 
                 // Cuerpo del cohete
                 ctx.fillStyle = '#F5F5F5';
                 ctx.beginPath();
-                ctx.moveTo(0, -this.size * 1.5);
+                ctx.moveTo(0, -this.size * 1.6);
                 ctx.lineTo(this.size / 2, 0);
                 ctx.lineTo(-this.size / 2, 0);
                 ctx.closePath();
                 ctx.fill();
 
-                // Alerones
+                // Alerones Rojos
                 ctx.fillStyle = '#F21414';
-                ctx.fillRect(-this.size / 1.8, -this.size / 4, this.size / 4, this.size / 2);
-                ctx.fillRect(this.size / 2.8, -this.size / 4, this.size / 4, this.size / 2);
+                ctx.fillRect(-this.size / 1.7, -this.size / 4, this.size / 3.8, this.size / 1.8);
+                ctx.fillRect(this.size / 2.7, -this.size / 4, this.size / 3.8, this.size / 1.8);
 
                 ctx.restore();
             }
         }
 
-        const rockets = Array.from({ length: 12 }, () => new Rocket());
+        const rockets = Array.from({ length: 14 }, () => new Rocket());
 
         function animate() {
-            ctx.fillStyle = 'rgba(11, 11, 16, 0.2)';
+            ctx.fillStyle = 'rgba(11, 11, 16, 0.22)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             // Dibujar estrellas
@@ -320,7 +334,7 @@
         }
         animate();
 
-        // --- RELOJ CUENTA REGRESIVA FUTURISTA (30 DE NOVIEMBRE) ---
+        // --- RELOJ CUENTA REGRESIVA NOVIEMBRE 30 ---
         const targetDate = new Date(new Date().getFullYear(), 10, 30, 23, 59, 59).getTime();
 
         function updateCountdown() {
@@ -347,36 +361,72 @@
         setInterval(updateCountdown, 1000);
         updateCountdown();
 
-        // --- EFECTO DE SONIDO AMBIENTAL ESPACIAL (Web Audio API) ---
+        // --- NUEVO SONIDO CINEMÁTICO DE PROPULSIÓN DE COHETE (Sintetizador Web Audio API Avanzado) ---
         let audioCtx;
         let isPlaying = false;
-        let oscillator, gainNode;
+        let noiseNode, filterNode, gainNode, subOsc;
+
+        function createNoiseBuffer(ctx) {
+            const bufferSize = ctx.sampleRate * 3;
+            const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+            const output = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                output[i] = Math.random() * 2 - 1;
+            }
+            return buffer;
+        }
 
         document.getElementById('audioToggle').addEventListener('click', () => {
             if (!audioCtx) {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             }
 
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+
             if (!isPlaying) {
-                // Crear sonido de rugido de cohete con oscilador y ruido
-                oscillator = audioCtx.createOscillator();
+                // 1. Generador de ruido de propulsión turbulenta (Jet Noise)
+                const noiseBuffer = createNoiseBuffer(audioCtx);
+                noiseNode = audioCtx.createBufferSource();
+                noiseNode.buffer = noiseBuffer;
+                noiseNode.loop = true;
+
+                // 2. Filtro de Frecuencia Pasabajo para simular el rugido grave de turbina
+                filterNode = audioCtx.createBiquadFilter();
+                filterNode.type = 'lowpass';
+                filterNode.frequency.setValueAtTime(320, audioCtx.currentTime);
+
+                // 3. Sub-oscilador de graves para el impacto de motores espacial
+                subOsc = audioCtx.createOscillator();
+                subOsc.type = 'sine';
+                subOsc.frequency.setValueAtTime(45, audioCtx.currentTime);
+
+                // 4. Control de Volumen (Master Gain)
                 gainNode = audioCtx.createGain();
-                
-                oscillator.type = 'sawtooth';
-                oscillator.frequency.setValueAtTime(60, audioCtx.currentTime); // Frecuencia baja (rumble)
-                
-                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
-                
-                oscillator.connect(gainNode);
+                gainNode.gain.setValueAtTime(0.01, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.25, audioCtx.currentTime + 1.5); // Fade in suave
+
+                // Conexiones de Audio
+                noiseNode.connect(filterNode);
+                filterNode.connect(gainNode);
+                subOsc.connect(gainNode);
                 gainNode.connect(audioCtx.destination);
-                
-                oscillator.start();
+
+                noiseNode.start();
+                subOsc.start();
+
                 isPlaying = true;
-                document.getElementById('audioToggle').innerText = "🔇 PAUSAR SONIDO";
+                document.getElementById('audioToggle').innerText = "🔇 DESACTIVAR SONIDO";
             } else {
-                oscillator.stop();
-                isPlaying = false;
-                document.getElementById('audioToggle').innerText = "🔊 SONIDO DE PROPULSIÓN";
+                // Fade out suave
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
+                setTimeout(() => {
+                    if (noiseNode) noiseNode.stop();
+                    if (subOsc) subOsc.stop();
+                    isPlaying = false;
+                    document.getElementById('audioToggle').innerText = "🚀 ACTIVAR PROPULSIÓN HYPER-SOUND";
+                }, 500);
             }
         });
     </script>
