@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eclipse Team 3 - Lanzamiento Proyecto Final</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --negro-espacial: #0B0B10;
+            --rojo-eclipse: #F21414;
+            --naranja-propulsion: #FF6A1A;
+            --blanco-brillante: #F5F5F5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--negro-espacial);
+            color: var(--blanco-brillante);
+            font-family: 'Rajdhani', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Canvas de animaciones de fondo */
+        #space-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo-img {
+            max-height: 70px;
+            filter: drop-shadow(0 0 10px rgba(242, 20, 20, 0.5));
+        }
+
+        .hero {
+            margin-top: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, #FFFFFF 0%, var(--naranja-propulsion) 50%, var(--rojo-eclipse) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 20px rgba(242, 20, 20, 0.3);
+        }
+
+        .quote {
+            font-size: 1.5rem;
+            font-style: italic;
+            color: #D1D5DB;
+            margin-bottom: 2.5rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            border-left: 4px solid var(--rojo-eclipse);
+            padding-left: 1rem;
+        }
+
+        /* Reloj futurista */
+        .countdown-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            letter-spacing: 3px;
+            color: var(--naranja-propulsion);
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+        }
+
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .time-box {
+            background: rgba(11, 11, 16, 0.7);
+            border: 2px solid var(--rojo-eclipse);
+            box-shadow: 0 0 15px rgba(242, 20, 20, 0.4), inset 0 0 15px rgba(255, 106, 26, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            min-width: 120px;
+            backdrop-filter: blur(5px);
+            transition: transform 0.3s ease;
+        }
+
+        .time-box:hover {
+            transform: translateY(-5px);
+            border-color: var(--naranja-propulsion);
+        }
+
+        .number {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: #FFFFFF;
+            text-shadow: 0 0 10px var(--naranja-propulsion);
+        }
+
+        .label {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #A1A1AA;
+            margin-top: 0.5rem;
+        }
+
+        /* Botón de Sonido */
+        .audio-btn {
+            background: linear-gradient(90deg, var(--rojo-eclipse), var(--naranja-propulsion));
+            border: none;
+            color: white;
+            padding: 1rem 2rem;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(255, 106, 26, 0.6);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .audio-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(242, 20, 20, 0.8);
+        }
+
+        footer {
+            position: relative;
+            z-index: 2;
+            padding: 1.5rem;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #6B7280;
+            border-top: 1px solid rgba(242, 20, 20, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="space-canvas"></canvas>
+
+    <div class="container">
+        <header>
+            <img src="logo-principal.png" alt="Eclipse Team 3 Logo" class="logo-img">
+            <button class="audio-btn" id="audioToggle">
+                🔊 SONIDO DE PROPULSIÓN
+            </button>
+        </header>
+
+        <main class="hero">
+            <h1>Eclipse Team 3</h1>
+            <p class="quote">"La oscuridad no apaga nuestra luz, es solo el escenario para nuestro lanzamiento más brillante."</p>
+
+            <div class="countdown-title">🚀 LAUNCH COUNTDOWN - NOVIEMBRE 30</div>
+            <div class="countdown">
+                <div class="time-box">
+                    <div class="number" id="days">00</div>
+                    <div class="label">Días</div>
+                </div>
+                <div class="time-box">
+                    <div class="number" id="hours">00</div>
+                    <div class="label">Horas</div>
+                </div>
+                <div class="time-box">
+                    <div class="number" id="minutes">00</div>
+                    <div class="label">Minutos</div>
+                </div>
+                <div class="time-box">
+                    <div class="number" id="seconds">00</div>
+                    <div class="label">Segundos</div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Eclipse Team 3. Todos los derechos reservados. Proyecto Final.</p>
+    </footer>
+
+    <script>
+        // --- ANIMACIÓN DE COHETES EN CANVAS ---
+        const canvas = document.getElementById('space-canvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        // Estrellas de fondo
+        const stars = Array.from({ length: 150 }, () => ({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            size: Math.random() * 2,
+            alpha: Math.random()
+        }));
+
+        // Cohetes en movimiento
+        class Rocket {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = canvas.height + 50 + Math.random() * 200;
+                this.speed = 2 + Math.random() * 3;
+                this.size = 15 + Math.random() * 15;
+                this.angle = -Math.PI / 2 + (Math.random() - 0.5) * 0.2; // Ascenso vertical con ligera inclinación
+            }
+
+            update() {
+                this.y -= this.speed;
+                this.x += Math.sin(this.y * 0.01) * 0.5;
+                if (this.y < -50) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.angle + Math.PI / 2);
+
+                // Estela / Fuego de propulsión (#FF6A1A y #F21414)
+                let gradient = ctx.createLinearGradient(0, 0, 0, this.size * 2);
+                gradient.addColorStop(0, '#FF6A1A');
+                gradient.addColorStop(0.5, '#F21414');
+                gradient.addColorStop(1, 'transparent');
+
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.moveTo(-this.size / 3, 0);
+                ctx.lineTo(this.size / 3, 0);
+                ctx.lineTo(0, this.size * 2 + Math.random() * 10);
+                ctx.closePath();
+                ctx.fill();
+
+                // Cuerpo del cohete
+                ctx.fillStyle = '#F5F5F5';
+                ctx.beginPath();
+                ctx.moveTo(0, -this.size * 1.5);
+                ctx.lineTo(this.size / 2, 0);
+                ctx.lineTo(-this.size / 2, 0);
+                ctx.closePath();
+                ctx.fill();
+
+                // Alerones
+                ctx.fillStyle = '#F21414';
+                ctx.fillRect(-this.size / 1.8, -this.size / 4, this.size / 4, this.size / 2);
+                ctx.fillRect(this.size / 2.8, -this.size / 4, this.size / 4, this.size / 2);
+
+                ctx.restore();
+            }
+        }
+
+        const rockets = Array.from({ length: 12 }, () => new Rocket());
+
+        function animate() {
+            ctx.fillStyle = 'rgba(11, 11, 16, 0.2)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Dibujar estrellas
+            ctx.fillStyle = '#FFFFFF';
+            stars.forEach(star => {
+                ctx.globalAlpha = star.alpha;
+                ctx.fillRect(star.x, star.y, star.size, star.size);
+            });
+            ctx.globalAlpha = 1;
+
+            // Dibujar cohetes
+            rockets.forEach(rocket => {
+                rocket.update();
+                rocket.draw();
+            });
+
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // --- RELOJ CUENTA REGRESIVA FUTURISTA (30 DE NOVIEMBRE) ---
+        const targetDate = new Date(new Date().getFullYear(), 10, 30, 23, 59, 59).getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const difference = targetDate - now;
+
+            if (difference > 0) {
+                const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+                document.getElementById('days').innerText = String(days).padStart(2, '0');
+                document.getElementById('hours').innerText = String(hours).padStart(2, '0');
+                document.getElementById('minutes').innerText = String(minutes).padStart(2, '0');
+                document.getElementById('seconds').innerText = String(seconds).padStart(2, '0');
+            } else {
+                document.getElementById('days').innerText = "00";
+                document.getElementById('hours').innerText = "00";
+                document.getElementById('minutes').innerText = "00";
+                document.getElementById('seconds').innerText = "00";
+            }
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // --- EFECTO DE SONIDO AMBIENTAL ESPACIAL (Web Audio API) ---
+        let audioCtx;
+        let isPlaying = false;
+        let oscillator, gainNode;
+
+        document.getElementById('audioToggle').addEventListener('click', () => {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+
+            if (!isPlaying) {
+                // Crear sonido de rugido de cohete con oscilador y ruido
+                oscillator = audioCtx.createOscillator();
+                gainNode = audioCtx.createGain();
+                
+                oscillator.type = 'sawtooth';
+                oscillator.frequency.setValueAtTime(60, audioCtx.currentTime); // Frecuencia baja (rumble)
+                
+                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                
+                oscillator.start();
+                isPlaying = true;
+                document.getElementById('audioToggle').innerText = "🔇 PAUSAR SONIDO";
+            } else {
+                oscillator.stop();
+                isPlaying = false;
+                document.getElementById('audioToggle').innerText = "🔊 SONIDO DE PROPULSIÓN";
+            }
+        });
+    </script>
+</body>
+</html>
