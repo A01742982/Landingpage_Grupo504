@@ -1,434 +1,1212 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eclipse Team 3 - Lanzamiento Proyecto Final</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --negro-espacial: #0B0B10;
-            --rojo-eclipse: #F21414;
-            --naranja-propulsion: #FF6A1A;
-            --blanco-brillante: #F5F5F5;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ECLIPSE TEAM 3 | Lanzamiento Proyecto Final</title>
+  <meta name="description" content="Eclipse Team 3 — Cuando la innovación eclipsa lo imposible, comienza una nueva era. Lanzamiento oficial 30 de noviembre." />
+  <link rel="icon" type="image/png" href="assets/favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --negro-espacial: #0B0B10;
+      --negro-panel: #12121B;
+      --rojo-eclipse: #F21414;
+      --naranja-propulsion: #FF6A1A;
+      --blanco-brillante: #F5F5F5;
+      --texto-secundario: #B8BCC8;
+      --borde-glow: rgba(242, 20, 20, 0.35);
+    }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        body {
-            background-color: var(--negro-espacial);
-            color: var(--blanco-brillante);
-            font-family: 'Rajdhani', sans-serif;
-            overflow-x: hidden;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
+    html {
+      scroll-behavior: smooth;
+    }
 
-        /* Canvas de animaciones de fondo */
-        #space-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            pointer-events: none;
-        }
+    body {
+      background-color: var(--negro-espacial);
+      color: var(--blanco-brillante);
+      font-family: 'Rajdhani', sans-serif;
+      overflow-x: hidden;
+      min-height: 100vh;
+      line-height: 1.55;
+    }
 
-        .container {
-            position: relative;
-            z-index: 2;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-            text-align: center;
-        }
+    /* Canvas animado de fondo */
+    #eclipse-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
 
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 0;
-        }
+    /* Halo ambiental del eclipse */
+    .eclipse-ambient-glow {
+      position: fixed;
+      top: -180px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 780px;
+      height: 780px;
+      border-radius: 50%;
+      background: radial-gradient(
+        circle,
+        rgba(11, 11, 16, 0.95) 36%,
+        rgba(255, 106, 26, 0.22) 48%,
+        rgba(242, 20, 20, 0.14) 58%,
+        transparent 72%
+      );
+      z-index: 0;
+      pointer-events: none;
+      animation: pulseCorona 7s ease-in-out infinite;
+    }
 
-        .logo-container {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
+    @keyframes pulseCorona {
+      0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.85; }
+      50% { transform: translateX(-50%) scale(1.06); opacity: 1; }
+    }
 
-        .logo-img {
-            height: 75px;
-            width: auto;
-            object-fit: contain;
-            filter: drop-shadow(0 0 12px rgba(242, 20, 20, 0.7));
-        }
+    /* Barra superior */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(14px);
+      background: rgba(11, 11, 16, 0.78);
+      border-bottom: 1px solid rgba(242, 20, 20, 0.25);
+    }
 
-        .hero {
-            margin-top: 2rem;
-            margin-bottom: 3rem;
-        }
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0.85rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
 
-        h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 3.8rem;
-            font-weight: 900;
-            text-transform: uppercase;
-            background: linear-gradient(135deg, #FFFFFF 0%, var(--naranja-propulsion) 50%, var(--rojo-eclipse) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 1rem;
-            text-shadow: 0 0 25px rgba(242, 20, 20, 0.4);
-        }
+    .brand-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: var(--blanco-brillante);
+    }
 
-        .quote {
-            font-size: 1.5rem;
-            font-style: italic;
-            color: #D1D5DB;
-            margin-bottom: 2.5rem;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-            border-left: 4px solid var(--rojo-eclipse);
-            padding-left: 1rem;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
-        }
+    .brand-badge img {
+      height: 44px;
+      width: auto;
+      filter: drop-shadow(0 0 10px rgba(255, 106, 26, 0.45));
+    }
 
-        /* Reloj futurista */
-        .countdown-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.2rem;
-            letter-spacing: 3px;
-            color: var(--naranja-propulsion);
-            margin-bottom: 1.5rem;
-            text-transform: uppercase;
-        }
+    .brand-title {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 800;
+      font-size: 1.05rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
 
-        .countdown {
-            display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-            margin-bottom: 3rem;
-            flex-wrap: wrap;
-        }
+    .brand-title span {
+      color: var(--rojo-eclipse);
+    }
 
-        .time-box {
-            background: rgba(11, 11, 16, 0.85);
-            border: 2px solid var(--rojo-eclipse);
-            box-shadow: 0 0 20px rgba(242, 20, 20, 0.5), inset 0 0 15px rgba(255, 106, 26, 0.3);
-            border-radius: 14px;
-            padding: 1.5rem;
-            min-width: 125px;
-            backdrop-filter: blur(8px);
-            transition: transform 0.3s ease, border-color 0.3s ease;
-        }
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
 
-        .time-box:hover {
-            transform: translateY(-6px);
-            border-color: var(--naranja-propulsion);
-        }
+    /* Botones de sonido y control */
+    .btn-sound {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      padding: 0.65rem 1.25rem;
+      border-radius: 999px;
+      border: 1px solid var(--naranja-propulsion);
+      background: linear-gradient(135deg, rgba(242, 20, 20, 0.22), rgba(255, 106, 26, 0.25));
+      color: var(--blanco-brillante);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      cursor: pointer;
+      box-shadow: 0 0 18px rgba(242, 20, 20, 0.35);
+      transition: all 0.25s ease;
+    }
 
-        .number {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 3.2rem;
-            font-weight: 700;
-            color: #FFFFFF;
-            text-shadow: 0 0 12px var(--naranja-propulsion);
-        }
+    .btn-sound:hover {
+      background: linear-gradient(135deg, var(--rojo-eclipse), var(--naranja-propulsion));
+      box-shadow: 0 0 26px rgba(255, 106, 26, 0.75);
+      transform: translateY(-1px);
+    }
 
-        .label {
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: #A1A1AA;
-            margin-top: 0.5rem;
-        }
+    .btn-sound.active {
+      background: linear-gradient(135deg, var(--rojo-eclipse), var(--naranja-propulsion));
+      box-shadow: 0 0 28px rgba(242, 20, 20, 0.85);
+    }
 
-        /* Botón de Sonido */
-        .audio-btn {
-            background: linear-gradient(90deg, var(--rojo-eclipse), var(--naranja-propulsion));
-            border: none;
-            color: white;
-            padding: 1rem 2rem;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1rem;
-            font-weight: bold;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 0 25px rgba(255, 106, 26, 0.7);
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-        }
+    .sound-bars {
+      display: inline-flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 14px;
+    }
 
-        .audio-btn:hover {
-            transform: scale(1.06);
-            box-shadow: 0 0 35px rgba(242, 20, 20, 0.9);
-        }
+    .sound-bars span {
+      width: 3px;
+      height: 5px;
+      background: var(--blanco-brillante);
+      border-radius: 2px;
+      transition: height 0.2s ease;
+    }
 
-        footer {
-            position: relative;
-            z-index: 2;
-            padding: 1.5rem;
-            text-align: center;
-            font-size: 0.9rem;
-            color: #6B7280;
-            border-top: 1px solid rgba(242, 20, 20, 0.2);
-        }
-    </style>
+    .btn-sound.active .sound-bars span:nth-child(1) { animation: eq 0.55s infinite ease-in-out; }
+    .btn-sound.active .sound-bars span:nth-child(2) { animation: eq 0.4s infinite ease-in-out 0.15s; }
+    .btn-sound.active .sound-bars span:nth-child(3) { animation: eq 0.65s infinite ease-in-out 0.05s; }
+    .btn-sound.active .sound-bars span:nth-child(4) { animation: eq 0.45s infinite ease-in-out 0.2s; }
+
+    @keyframes eq {
+      0%, 100% { height: 4px; }
+      50% { height: 14px; }
+    }
+
+    /* Contenedor principal */
+    main {
+      position: relative;
+      z-index: 5;
+    }
+
+    .section {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 3.5rem 1.5rem;
+    }
+
+    /* HERO */
+    .hero {
+      text-align: center;
+      padding-top: 2.5rem;
+      padding-bottom: 4rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .mission-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.4rem 1.1rem;
+      border-radius: 999px;
+      background: rgba(242, 20, 20, 0.14);
+      border: 1px solid rgba(255, 106, 26, 0.45);
+      color: var(--naranja-propulsion);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--rojo-eclipse);
+      box-shadow: 0 0 10px var(--rojo-eclipse);
+      animation: blink 1.2s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.35; transform: scale(0.75); }
+    }
+
+    .hero-logo-wrap {
+      position: relative;
+      margin-bottom: 1.5rem;
+      animation: floatLogo 5s ease-in-out infinite;
+    }
+
+    @keyframes floatLogo {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .hero-logo {
+      width: 210px;
+      max-width: 56vw;
+      height: auto;
+      filter: drop-shadow(0 0 28px rgba(242, 20, 20, 0.55)) drop-shadow(0 0 12px rgba(255, 106, 26, 0.45));
+    }
+
+    .hero-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(2.4rem, 6vw, 4.4rem);
+      font-weight: 900;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      line-height: 1.08;
+      margin-bottom: 0.4rem;
+      background: linear-gradient(180deg, #FFFFFF 20%, #E2E4EC 65%, var(--naranja-propulsion) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-subtitle {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(1rem, 2.3vw, 1.35rem);
+      font-weight: 700;
+      letter-spacing: 6px;
+      color: var(--rojo-eclipse);
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+    }
+
+    /* Slogan súper motivador */
+    .slogan-card {
+      position: relative;
+      max-width: 880px;
+      margin: 0 auto 2.8rem;
+      padding: 1.75rem 2.2rem;
+      background: linear-gradient(145deg, rgba(18, 18, 27, 0.88), rgba(11, 11, 16, 0.94));
+      border: 1px solid rgba(255, 106, 26, 0.38);
+      border-radius: 16px;
+      box-shadow: 0 15px 45px rgba(0, 0, 0, 0.65), inset 0 0 25px rgba(242, 20, 20, 0.12);
+    }
+
+    .slogan-card::before,
+    .slogan-card::after {
+      content: '';
+      position: absolute;
+      width: 26px;
+      height: 26px;
+      border-color: var(--rojo-eclipse);
+      border-style: solid;
+    }
+
+    .slogan-card::before {
+      top: -2px;
+      left: -2px;
+      border-width: 3px 0 0 3px;
+      border-top-left-radius: 14px;
+    }
+
+    .slogan-card::after {
+      bottom: -2px;
+      right: -2px;
+      border-width: 0 3px 3px 0;
+      border-bottom-right-radius: 14px;
+    }
+
+    .slogan-quote {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(1.15rem, 2.5vw, 1.65rem);
+      font-weight: 800;
+      line-height: 1.4;
+      color: var(--blanco-brillante);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .slogan-quote .highlight {
+      color: var(--naranja-propulsion);
+      text-shadow: 0 0 18px rgba(255, 106, 26, 0.55);
+    }
+
+    .slogan-sub {
+      margin-top: 0.75rem;
+      font-size: 1.15rem;
+      color: var(--texto-secundario);
+      font-weight: 500;
+    }
+
+    /* RELOJ FUTURISTA DE CUENTA REGRESIVA */
+    .countdown-wrapper {
+      width: 100%;
+      max-width: 920px;
+      margin: 0 auto 2.5rem;
+      padding: 2rem 1.5rem;
+      border-radius: 20px;
+      background: rgba(14, 14, 22, 0.82);
+      border: 1px solid rgba(242, 20, 20, 0.45);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 0 45px rgba(242, 20, 20, 0.18);
+    }
+
+    .countdown-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.35rem;
+      margin-bottom: 1.6rem;
+    }
+
+    .countdown-kicker {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: var(--naranja-propulsion);
+      text-transform: uppercase;
+    }
+
+    .countdown-target {
+      font-size: 1.1rem;
+      color: var(--texto-secundario);
+    }
+
+    .countdown-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.1rem;
+    }
+
+    .hud-unit {
+      position: relative;
+      background: linear-gradient(180deg, rgba(22, 22, 34, 0.95), rgba(11, 11, 16, 0.98));
+      border: 1px solid rgba(255, 106, 26, 0.35);
+      border-radius: 14px;
+      padding: 1.35rem 0.75rem;
+      overflow: hidden;
+      transition: transform 0.25s ease, border-color 0.25s ease;
+    }
+
+    .hud-unit:hover {
+      transform: translateY(-4px);
+      border-color: var(--rojo-eclipse);
+    }
+
+    .hud-unit::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--rojo-eclipse), var(--naranja-propulsion));
+    }
+
+    .hud-number {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(2rem, 5vw, 3.35rem);
+      font-weight: 900;
+      color: var(--blanco-brillante);
+      text-shadow: 0 0 18px rgba(255, 106, 26, 0.65), 0 0 32px rgba(242, 20, 20, 0.45);
+      letter-spacing: 2px;
+      line-height: 1.1;
+    }
+
+    .hud-label {
+      margin-top: 0.45rem;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      color: var(--naranja-propulsion);
+      text-transform: uppercase;
+    }
+
+    .countdown-controls {
+      margin-top: 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.9rem;
+    }
+
+    .btn-primary {
+      padding: 0.9rem 1.8rem;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(90deg, var(--rojo-eclipse), var(--naranja-propulsion));
+      color: var(--blanco-brillante);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 0 0 24px rgba(242, 20, 20, 0.5);
+      transition: all 0.25s ease;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 0 34px rgba(255, 106, 26, 0.85);
+    }
+
+    .btn-secondary {
+      padding: 0.9rem 1.6rem;
+      border-radius: 10px;
+      border: 1px solid rgba(245, 245, 245, 0.3);
+      background: rgba(245, 245, 245, 0.05);
+      color: var(--blanco-brillante);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 1.3px;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--naranja-propulsion);
+      background: rgba(255, 106, 26, 0.14);
+    }
+
+    /* SECCIÓN MISIÓN Y PILARES */
+    .section-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .section-tag {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: var(--naranja-propulsion);
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .section-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(1.65rem, 3.5vw, 2.4rem);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .pillar-card {
+      background: rgba(18, 18, 27, 0.82);
+      border: 1px solid rgba(242, 20, 20, 0.28);
+      border-radius: 16px;
+      padding: 1.8rem;
+      backdrop-filter: blur(8px);
+      transition: transform 0.25s ease, border-color 0.25s ease;
+    }
+
+    .pillar-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--naranja-propulsion);
+    }
+
+    .pillar-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(242, 20, 20, 0.25), rgba(255, 106, 26, 0.25));
+      border: 1px solid var(--rojo-eclipse);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 900;
+      color: var(--naranja-propulsion);
+      margin-bottom: 1.1rem;
+      font-size: 1.1rem;
+    }
+
+    .pillar-card h3 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.1rem;
+      margin-bottom: 0.65rem;
+      letter-spacing: 1px;
+    }
+
+    .pillar-card p {
+      color: var(--texto-secundario);
+      font-size: 1.05rem;
+    }
+
+    /* SECCIÓN IDENTIDAD VISUAL OFICIAL */
+    .identity-box {
+      background: rgba(18, 18, 27, 0.85);
+      border: 1px solid rgba(255, 106, 26, 0.3);
+      border-radius: 20px;
+      padding: 2rem;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .identity-preview img {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid rgba(245, 245, 245, 0.15);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6);
+    }
+
+    .palette-list {
+      display: grid;
+      gap: 0.9rem;
+      margin-top: 1.25rem;
+    }
+
+    .swatch {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.7rem 1rem;
+      border-radius: 12px;
+      background: rgba(11, 11, 16, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .swatch-color {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      flex-shrink: 0;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    .swatch-info strong {
+      display: block;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+    }
+
+    .swatch-info span {
+      font-size: 0.92rem;
+      color: var(--texto-secundario);
+    }
+
+    /* FOOTER */
+    footer {
+      position: relative;
+      z-index: 5;
+      margin-top: 3rem;
+      border-top: 1px solid rgba(242, 20, 20, 0.3);
+      background: rgba(11, 11, 16, 0.9);
+      padding: 2rem 1.5rem;
+      text-align: center;
+    }
+
+    .footer-logo {
+      height: 46px;
+      margin-bottom: 0.9rem;
+      background: var(--blanco-brillante);
+      padding: 6px 14px;
+      border-radius: 10px;
+    }
+
+    footer p {
+      color: var(--texto-secundario);
+      font-size: 0.98rem;
+    }
+
+    @media (max-width: 820px) {
+      .countdown-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .identity-box {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 <body>
+  <div class="eclipse-ambient-glow"></div>
+  <canvas id="eclipse-canvas"></canvas>
 
-    <canvas id="space-canvas"></canvas>
-
-    <div class="container">
-        <header>
-            <div class="logo-container">
-                <img src="Logo principal.png" 
-                     onerror="this.onerror=null; this.src='';" 
-                     alt="Eclipse Team 3 Logo" 
-                     class="logo-img">
-            </div>
-            <button class="audio-btn" id="audioToggle">
-                🚀 ACTIVAR PROPULSIÓN HYPER-SOUND
-            </button>
-        </header>
-
-        <main class="hero">
-            <h1>Eclipse Team 3</h1>
-            <p class="quote">"La oscuridad no apaga nuestra luz, es solo el escenario para nuestro lanzamiento más brillante."</p>
-
-            <div class="countdown-title">🚀 LAUNCH COUNTDOWN - NOVIEMBRE 30</div>
-            <div class="countdown">
-                <div class="time-box">
-                    <div class="number" id="days">00</div>
-                    <div class="label">Días</div>
-                </div>
-                <div class="time-box">
-                    <div class="number" id="hours">00</div>
-                    <div class="label">Horas</div>
-                </div>
-                <div class="time-box">
-                    <div class="number" id="minutes">00</div>
-                    <div class="label">Minutos</div>
-                </div>
-                <div class="time-box">
-                    <div class="number" id="seconds">00</div>
-                    <div class="label">Segundos</div>
-                </div>
-            </div>
-        </main>
+  <header class="navbar">
+    <div class="nav-inner">
+      <a href="#inicio" class="brand-badge">
+        <img src="assets/logo-principal.png" alt="Logo Eclipse Team 3" />
+        <div class="brand-title">ECLIPSE <span>TEAM 3</span></div>
+      </a>
+      <div class="nav-actions">
+        <button id="toggleSoundBtn" class="btn-sound" type="button" aria-label="Activar o desactivar sonido de cuenta regresiva">
+          <span class="sound-bars">
+            <span></span><span></span><span></span><span></span>
+          </span>
+          <span id="soundBtnText">SONIDO: OFF</span>
+        </button>
+      </div>
     </div>
+  </header>
 
-    <footer>
-        <p>&copy; 2026 Eclipse Team 3. Todos los derechos reservados. Proyecto Final.</p>
-    </footer>
+  <main id="inicio">
+    <!-- HERO -->
+    <section class="section hero">
+      <div class="mission-tag">
+        <span class="pulse-dot"></span>
+        <span>PROYECTO FINAL &bull; MISIÓN EN ÓRBITA</span>
+      </div>
 
-    <script>
-        // --- ANIMACIÓN DE COHETES EN CANVAS ---
-        const canvas = document.getElementById('space-canvas');
-        const ctx = canvas.getContext('2d');
+      <div class="hero-logo-wrap">
+        <img src="assets/logo-principal.png" alt="Emblema Oficial Eclipse Team 3" class="hero-logo" />
+      </div>
 
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+      <h1 class="hero-title">ECLIPSE TEAM 3</h1>
+      <div class="hero-subtitle">INNOVACIÓN &bull; POTENCIA &bull; FUTURO</div>
+
+      <div class="slogan-card">
+        <p class="slogan-quote">
+          &ldquo;CUANDO LA DETERMINACIÓN ECLIPSA LO IMPOSIBLE, <span class="highlight">NUESTRO DESPEGUE ILUMINA EL FUTURO</span>.&rdquo;
+        </p>
+        <p class="slogan-sub">
+          No esperamos el momento perfecto: encendemos los motores, rompemos la gravedad de lo ordinario y convertimos nuestro proyecto final en historia.
+        </p>
+      </div>
+
+      <!-- RELOJ FUTURISTA -->
+      <div class="countdown-wrapper" id="lanzamiento">
+        <div class="countdown-header">
+          <div class="countdown-kicker">TELEMETRÍA DE LANZAMIENTO ESPECTACULAR</div>
+          <div class="countdown-target" id="targetLabel">Objetivo: 30 de Noviembre de 2026 &mdash; 23:59:59 hrs</div>
+        </div>
+
+        <div class="countdown-grid">
+          <div class="hud-unit">
+            <div class="hud-number" id="cd-days">00</div>
+            <div class="hud-label">Días</div>
+          </div>
+          <div class="hud-unit">
+            <div class="hud-number" id="cd-hours">00</div>
+            <div class="hud-label">Horas</div>
+          </div>
+          <div class="hud-unit">
+            <div class="hud-number" id="cd-minutes">00</div>
+            <div class="hud-label">Minutos</div>
+          </div>
+          <div class="hud-unit">
+            <div class="hud-number" id="cd-seconds">00</div>
+            <div class="hud-label">Segundos</div>
+          </div>
+        </div>
+
+        <div class="countdown-controls">
+          <button id="ignitionBtn" class="btn-primary" type="button">
+            SIMULAR IGNICIÓN Y CUENTA REGRESIVA (10s)
+          </button>
+          <a href="#identidad" class="btn-secondary">EXPLORAR IDENTIDAD DEL EQUIPO</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- PILARES DEL PROYECTO -->
+    <section class="section" id="mision">
+      <div class="section-header">
+        <span class="section-tag">ARQUITECTURA DE MISIÓN</span>
+        <h2 class="section-title">Listos Para El Gran Despegue</h2>
+      </div>
+
+      <div class="pillars-grid">
+        <article class="pillar-card">
+          <div class="pillar-icon">01</div>
+          <h3>Visión Disruptiva</h3>
+          <p>Diseñamos soluciones con precisión estratégica y ejecución de alto impacto para superar cada reto del proyecto final.</p>
+        </article>
+        <article class="pillar-card">
+          <div class="pillar-icon">02</div>
+          <h3>Propulsión En Equipo</h3>
+          <p>Cada integrante aporta talento, disciplina y creatividad sincronizada como una nave rumbo a órbita.</p>
+        </article>
+        <article class="pillar-card">
+          <div class="pillar-icon">03</div>
+          <h3>Lanzamiento Noviembre</h3>
+          <p>La cuenta regresiva está en marcha. Al cierre de noviembre presentaremos un resultado inolvidable.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- IDENTIDAD VISUAL OFICIAL -->
+    <section class="section" id="identidad">
+      <div class="section-header">
+        <span class="section-tag">MANUAL DE MARCA</span>
+        <h2 class="section-title">Identidad Visual Oficial</h2>
+      </div>
+
+      <div class="identity-box">
+        <div class="identity-preview">
+          <img src="assets/kit-identidad.png" alt="Kit de Logos e Identidad Visual Eclipse Team 3" />
+        </div>
+        <div>
+          <h3 style="font-family:'Orbitron',sans-serif; font-size:1.25rem; margin-bottom:0.5rem;">Sistema Cromático Oficial</h3>
+          <p style="color:var(--texto-secundario);">
+            Esta landing page respeta fielmente la paleta oficial de <strong>Eclipse Team 3</strong>: contraste espacial profundo con energía solar de eclipse y fuego de propulsión.
+          </p>
+          <div class="palette-list">
+            <div class="swatch">
+              <div class="swatch-color" style="background:#0B0B10;"></div>
+              <div class="swatch-info">
+                <strong>Negro Espacial &bull; #0B0B10</strong>
+                <span>RGB 11, 11, 16 &mdash; Profundidad cósmica</span>
+              </div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-color" style="background:#F21414;"></div>
+              <div class="swatch-info">
+                <strong>Rojo Eclipse &bull; #F21414</strong>
+                <span>RGB 242, 20, 20 &mdash; Potencia y corona solar</span>
+              </div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-color" style="background:#FF6A1A;"></div>
+              <div class="swatch-info">
+                <strong>Naranja Propulsión &bull; #FF6A1A</strong>
+                <span>RGB 255, 106, 26 &mdash; Energía y empuje</span>
+              </div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-color" style="background:#F5F5F5;"></div>
+              <div class="swatch-info">
+                <strong>Blanco Brillante &bull; #F5F5F5</strong>
+                <span>RGB 245, 245, 245 &mdash; Claridad y precisión</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <img src="assets/logo-horizontal.png" alt="Eclipse Team 3" class="footer-logo" />
+    <p>&copy; 2026 <strong>Eclipse Team 3</strong> &mdash; Proyecto Final. Todos los derechos reservados.</p>
+  </footer>
+
+  <script>
+    // =========================================================
+    // 1. ANIMACIÓN DE FONDO CON COHETES DE ECLIPSE TEAM 3
+    // =========================================================
+    const canvas = document.getElementById('eclipse-canvas');
+    const ctx = canvas.getContext('2d');
+    let W = 0, H = 0;
+
+    function resize() {
+      W = canvas.width = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    // Estrellas de 4 puntas (estilo destellos del logo) y partículas estelares
+    const stars = Array.from({ length: 130 }, () => ({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: Math.random() * 1.8 + 0.4,
+      twinkle: Math.random() * Math.PI * 2,
+      speed: 0.015 + Math.random() * 0.03,
+      sparkle: Math.random() > 0.86
+    }));
+
+    // Cohetes inspirados en el isotipo oficial de Eclipse Team 3
+    class EclipseRocket {
+      constructor(initialSpread = false) {
+        this.spawn(initialSpread);
+      }
+
+      spawn(initialSpread = false) {
+        this.scale = 0.55 + Math.random() * 0.65;
+        this.x = Math.random() * W;
+        this.y = initialSpread ? Math.random() * H : H + 110 + Math.random() * 180;
+        this.vy = -(1.4 + Math.random() * 2.2);
+        this.vx = (Math.random() - 0.5) * 0.7;
+        this.wobble = Math.random() * Math.PI * 2;
+        this.trail = [];
+        this.boost = 1;
+      }
+
+      update(boostMultiplier = 1) {
+        this.wobble += 0.03;
+        this.x += this.vx + Math.sin(this.wobble) * 0.35;
+        this.y += this.vy * boostMultiplier;
+
+        this.trail.push({ x: this.x, y: this.y + 18 * this.scale, alpha: 0.9 });
+        if (this.trail.length > 22) this.trail.shift();
+
+        if (this.y < -140 || this.x < -120 || this.x > W + 120) {
+          this.spawn(false);
         }
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
+      }
 
-        // Estrellas de fondo
-        const stars = Array.from({ length: 180 }, () => ({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height,
-            size: Math.random() * 2.2,
-            alpha: Math.random()
-        }));
-
-        // Cohetes en movimiento continuo
-        class Rocket {
-            constructor() {
-                this.reset();
-            }
-
-            reset() {
-                this.x = Math.random() * canvas.width;
-                this.y = canvas.height + 60 + Math.random() * 200;
-                this.speed = 2.5 + Math.random() * 3.5;
-                this.size = 18 + Math.random() * 14;
-                this.angle = -Math.PI / 2 + (Math.random() - 0.5) * 0.15;
-            }
-
-            update() {
-                this.y -= this.speed;
-                this.x += Math.sin(this.y * 0.008) * 0.6;
-                if (this.y < -80) {
-                    this.reset();
-                }
-            }
-
-            draw() {
-                ctx.save();
-                ctx.translate(this.x, this.y);
-                ctx.rotate(this.angle + Math.PI / 2);
-
-                // Estela / Fuego de propulsión oficial (#FF6A1A y #F21414)
-                let gradient = ctx.createLinearGradient(0, 0, 0, this.size * 2.5);
-                gradient.addColorStop(0, '#FF6A1A');
-                gradient.addColorStop(0.4, '#F21414');
-                gradient.addColorStop(1, 'transparent');
-
-                ctx.fillStyle = gradient;
-                ctx.beginPath();
-                ctx.moveTo(-this.size / 3, 0);
-                ctx.lineTo(this.size / 3, 0);
-                ctx.lineTo(0, this.size * 2.5 + Math.random() * 12);
-                ctx.closePath();
-                ctx.fill();
-
-                // Cuerpo del cohete
-                ctx.fillStyle = '#F5F5F5';
-                ctx.beginPath();
-                ctx.moveTo(0, -this.size * 1.6);
-                ctx.lineTo(this.size / 2, 0);
-                ctx.lineTo(-this.size / 2, 0);
-                ctx.closePath();
-                ctx.fill();
-
-                // Alerones Rojos
-                ctx.fillStyle = '#F21414';
-                ctx.fillRect(-this.size / 1.7, -this.size / 4, this.size / 3.8, this.size / 1.8);
-                ctx.fillRect(this.size / 2.7, -this.size / 4, this.size / 3.8, this.size / 1.8);
-
-                ctx.restore();
-            }
+      draw(boostMultiplier = 1) {
+        // Estela luminosa
+        for (let i = 0; i < this.trail.length; i++) {
+          const t = this.trail[i];
+          const ratio = i / this.trail.length;
+          ctx.save();
+          ctx.globalAlpha = ratio * 0.35;
+          ctx.fillStyle = ratio > 0.5 ? '#FF6A1A' : '#F21414';
+          ctx.beginPath();
+          ctx.arc(t.x, t.y, (2 + ratio * 5) * this.scale, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
         }
 
-        const rockets = Array.from({ length: 14 }, () => new Rocket());
+        const tilt = Math.atan2(this.vx + Math.cos(this.wobble) * 0.25, -this.vy);
 
-        function animate() {
-            ctx.fillStyle = 'rgba(11, 11, 16, 0.22)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(tilt);
+        ctx.scale(this.scale, this.scale);
 
-            // Dibujar estrellas
-            ctx.fillStyle = '#FFFFFF';
-            stars.forEach(star => {
-                ctx.globalAlpha = star.alpha;
-                ctx.fillRect(star.x, star.y, star.size, star.size);
-            });
-            ctx.globalAlpha = 1;
+        // Chorro de propulsión tricolor (Blanco -> Naranja #FF6A1A -> Rojo #F21414)
+        const flameLen = (48 + Math.random() * 18) * boostMultiplier;
 
-            // Dibujar cohetes
-            rockets.forEach(rocket => {
-                rocket.update();
-                rocket.draw();
-            });
+        // Pluma exterior roja
+        ctx.fillStyle = '#F21414';
+        ctx.beginPath();
+        ctx.moveTo(-16, 14);
+        ctx.quadraticCurveTo(-8, 28, -24, 14 + flameLen * 0.85);
+        ctx.lineTo(0, 14 + flameLen);
+        ctx.lineTo(24, 14 + flameLen * 0.85);
+        ctx.quadraticCurveTo(8, 28, 16, 14);
+        ctx.closePath();
+        ctx.fill();
 
-            requestAnimationFrame(animate);
+        // Pluma media naranja
+        ctx.fillStyle = '#FF6A1A';
+        ctx.beginPath();
+        ctx.moveTo(-10, 14);
+        ctx.quadraticCurveTo(-4, 24, -13, 14 + flameLen * 0.72);
+        ctx.lineTo(0, 14 + flameLen * 0.82);
+        ctx.lineTo(13, 14 + flameLen * 0.72);
+        ctx.quadraticCurveTo(4, 24, 10, 14);
+        ctx.closePath();
+        ctx.fill();
+
+        // Núcleo blanco brillante
+        ctx.fillStyle = '#F5F5F5';
+        ctx.beginPath();
+        ctx.moveTo(-5, 14);
+        ctx.lineTo(-6, 14 + flameLen * 0.45);
+        ctx.lineTo(0, 14 + flameLen * 0.56);
+        ctx.lineTo(6, 14 + flameLen * 0.45);
+        ctx.lineTo(5, 14);
+        ctx.closePath();
+        ctx.fill();
+
+        // Silueta exterior negra con contorno rojo/naranja (estilo logo Eclipse Team 3)
+        ctx.fillStyle = '#0B0B10';
+        ctx.strokeStyle = '#F21414';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(0, -42);
+        ctx.quadraticCurveTo(15, -16, 15, 14);
+        ctx.lineTo(6, 10);
+        ctx.lineTo(-6, 10);
+        ctx.lineTo(-15, 14);
+        ctx.quadraticCurveTo(-15, -16, 0, -42);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        // Fuselaje central blanco
+        ctx.fillStyle = '#F5F5F5';
+        ctx.beginPath();
+        ctx.moveTo(0, -28);
+        ctx.quadraticCurveTo(7, -12, 6, 8);
+        ctx.lineTo(-6, 8);
+        ctx.quadraticCurveTo(-7, -12, 0, -28);
+        ctx.closePath();
+        ctx.fill();
+
+        // Aletas laterales blancas
+        ctx.beginPath();
+        ctx.moveTo(-8, -4);
+        ctx.lineTo(-13, 4);
+        ctx.lineTo(-13, 11);
+        ctx.lineTo(-8, 6);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.moveTo(8, -4);
+        ctx.lineTo(13, 4);
+        ctx.lineTo(13, 11);
+        ctx.lineTo(8, 6);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.restore();
+      }
+    }
+
+    const rockets = Array.from({ length: 11 }, () => new EclipseRocket(true));
+    let globalBoost = 1;
+
+    function drawFourPointStar(x, y, size, alpha) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = '#F5F5F5';
+      ctx.beginPath();
+      ctx.moveTo(0, -size * 3.2);
+      ctx.quadraticCurveTo(0, 0, size * 3.2, 0);
+      ctx.quadraticCurveTo(0, 0, 0, size * 3.2);
+      ctx.quadraticCurveTo(0, 0, -size * 3.2, 0);
+      ctx.quadraticCurveTo(0, 0, 0, -size * 3.2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function renderLoop() {
+      ctx.clearRect(0, 0, W, H);
+
+      // Dibujar estrellas
+      for (const s of stars) {
+        s.twinkle += s.speed;
+        const a = 0.25 + (Math.sin(s.twinkle) + 1) * 0.37;
+        if (s.sparkle) {
+          drawFourPointStar(s.x, s.y, s.r * 1.6, a);
+        } else {
+          ctx.fillStyle = `rgba(245, 245, 245, ${a.toFixed(2)})`;
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+          ctx.fill();
         }
-        animate();
+      }
 
-        // --- RELOJ CUENTA REGRESIVA NOVIEMBRE 30 ---
-        const targetDate = new Date(new Date().getFullYear(), 10, 30, 23, 59, 59).getTime();
+      // Actualizar y dibujar cohetes
+      for (const r of rockets) {
+        r.update(globalBoost);
+        r.draw(globalBoost);
+      }
 
-        function updateCountdown() {
-            const now = new Date().getTime();
-            const difference = targetDate - now;
+      requestAnimationFrame(renderLoop);
+    }
+    renderLoop();
 
-            if (difference > 0) {
-                const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+    // =========================================================
+    // 2. MOTOR DE SONIDO DE CUENTA REGRESIVA E IGNICIÓN (Web Audio API)
+    // =========================================================
+    let audioCtx = null;
+    let soundEnabled = false;
+    let droneOsc = null;
+    let droneGain = null;
 
-                document.getElementById('days').innerText = String(days).padStart(2, '0');
-                document.getElementById('hours').innerText = String(hours).padStart(2, '0');
-                document.getElementById('minutes').innerText = String(minutes).padStart(2, '0');
-                document.getElementById('seconds').innerText = String(seconds).padStart(2, '0');
-            } else {
-                document.getElementById('days').innerText = "00";
-                document.getElementById('hours').innerText = "00";
-                document.getElementById('minutes').innerText = "00";
-                document.getElementById('seconds').innerText = "00";
-            }
+    const toggleSoundBtn = document.getElementById('toggleSoundBtn');
+    const soundBtnText = document.getElementById('soundBtnText');
+
+    function ensureAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function startAmbientDrone() {
+      ensureAudio();
+      if (droneOsc) return;
+
+      droneOsc = audioCtx.createOscillator();
+      const filter = audioCtx.createBiquadFilter();
+      droneGain = audioCtx.createGain();
+
+      droneOsc.type = 'sawtooth';
+      droneOsc.frequency.value = 46;
+
+      filter.type = 'lowpass';
+      filter.frequency.value = 135;
+
+      droneGain.gain.setValueAtTime(0.001, audioCtx.currentTime);
+      droneGain.gain.exponentialRampToValueAtTime(0.055, audioCtx.currentTime + 0.8);
+
+      droneOsc.connect(filter);
+      filter.connect(droneGain);
+      droneGain.connect(audioCtx.destination);
+      droneOsc.start();
+    }
+
+    function stopAmbientDrone() {
+      if (droneOsc) {
+        try { droneOsc.stop(); } catch (e) {}
+        droneOsc.disconnect();
+        droneOsc = null;
+      }
+    }
+
+    // Pulso sonoro futurista por cada segundo de la cuenta regresiva
+    function playCountdownTick(urgent = false) {
+      if (!soundEnabled) return;
+      ensureAudio();
+
+      const now = audioCtx.currentTime;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+
+      osc.type = urgent ? 'triangle' : 'sine';
+      osc.frequency.setValueAtTime(urgent ? 980 : 660, now);
+      osc.frequency.exponentialRampToValueAtTime(urgent ? 490 : 330, now + 0.11);
+
+      gain.gain.setValueAtTime(urgent ? 0.14 : 0.06, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.12);
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(now);
+      osc.stop(now + 0.13);
+    }
+
+    // Rugido de lanzamiento espacial
+    function playLaunchBlast() {
+      ensureAudio();
+      const now = audioCtx.currentTime;
+
+      // Ruido blanco filtrado para propulsión
+      const bufferSize = audioCtx.sampleRate * 2.6;
+      const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = Math.random() * 2 - 1;
+      }
+
+      const noise = audioCtx.createBufferSource();
+      noise.buffer = buffer;
+
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(160, now);
+      filter.frequency.exponentialRampToValueAtTime(1200, now + 1.1);
+      filter.frequency.exponentialRampToValueAtTime(220, now + 2.5);
+
+      const gain = audioCtx.createGain();
+      gain.gain.setValueAtTime(0.01, now);
+      gain.gain.linearRampToValueAtTime(0.28, now + 0.45);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 2.55);
+
+      noise.connect(filter);
+      filter.connect(gain);
+      gain.connect(audioCtx.destination);
+      noise.start(now);
+      noise.stop(now + 2.6);
+    }
+
+    function setSoundState(enabled) {
+      soundEnabled = enabled;
+      if (soundEnabled) {
+        toggleSoundBtn.classList.add('active');
+        soundBtnText.textContent = 'SONIDO: ON';
+        startAmbientDrone();
+        playCountdownTick(true);
+      } else {
+        toggleSoundBtn.classList.remove('active');
+        soundBtnText.textContent = 'SONIDO: OFF';
+        stopAmbientDrone();
+      }
+    }
+
+    toggleSoundBtn.addEventListener('click', () => {
+      setSoundState(!soundEnabled);
+    });
+
+    // =========================================================
+    // 3. RELOJ FUTURISTA HACIA FIN DE NOVIEMBRE (30 NOV)
+    // =========================================================
+    const nowInit = new Date();
+    let targetYear = nowInit.getFullYear();
+    let endOfNovember = new Date(targetYear, 10, 30, 23, 59, 59); // Mes 10 = Noviembre
+    if (nowInit > endOfNovember) {
+      targetYear += 1;
+      endOfNovember = new Date(targetYear, 10, 30, 23, 59, 59);
+    }
+    document.getElementById('targetLabel').textContent =
+      `Objetivo: 30 de Noviembre de ${targetYear} — 23:59:59 hrs`;
+
+    const elDays = document.getElementById('cd-days');
+    const elHours = document.getElementById('cd-hours');
+    const elMinutes = document.getElementById('cd-minutes');
+    const elSeconds = document.getElementById('cd-seconds');
+
+    let lastSecond = -1;
+    let simInterval = null;
+
+    function renderDigits(days, hours, minutes, seconds) {
+      elDays.textContent = String(days).padStart(2, '0');
+      elHours.textContent = String(hours).padStart(2, '0');
+      elMinutes.textContent = String(minutes).padStart(2, '0');
+      elSeconds.textContent = String(seconds).padStart(2, '0');
+    }
+
+    function tickRealCountdown() {
+      if (simInterval) return; // Pausar reloj real mientras corre la simulación de 10s
+      const now = new Date();
+      const diff = Math.max(0, endOfNovember - now);
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+
+      renderDigits(days, hours, minutes, seconds);
+
+      if (seconds !== lastSecond) {
+        lastSecond = seconds;
+        playCountdownTick(false);
+      }
+    }
+
+    setInterval(tickRealCountdown, 250);
+    tickRealCountdown();
+
+    // Simulador de ignición final de 10 segundos para presentaciones en vivo
+    const ignitionBtn = document.getElementById('ignitionBtn');
+    ignitionBtn.addEventListener('click', () => {
+      if (simInterval) return;
+      if (!soundEnabled) setSoundState(true);
+
+      let simSec = 10;
+      ignitionBtn.disabled = true;
+      ignitionBtn.textContent = 'IGNICIÓN EN CURSO...';
+      globalBoost = 2.4;
+
+      renderDigits(0, 0, 0, simSec);
+      playCountdownTick(true);
+
+      simInterval = setInterval(() => {
+        simSec -= 1;
+        if (simSec > 0) {
+          renderDigits(0, 0, 0, simSec);
+          playCountdownTick(true);
+        } else {
+          renderDigits(0, 0, 0, 0);
+          playLaunchBlast();
+          globalBoost = 5.5;
+          ignitionBtn.textContent = '¡DESPEGUE EXITOSO!';
+          clearInterval(simInterval);
+
+          setTimeout(() => {
+            simInterval = null;
+            globalBoost = 1;
+            ignitionBtn.disabled = false;
+            ignitionBtn.textContent = 'SIMULAR IGNICIÓN Y CUENTA REGRESIVA (10s)';
+            tickRealCountdown();
+          }, 3200);
         }
-        setInterval(updateCountdown, 1000);
-        updateCountdown();
-
-        // --- NUEVO SONIDO CINEMÁTICO DE PROPULSIÓN DE COHETE (Sintetizador Web Audio API Avanzado) ---
-        let audioCtx;
-        let isPlaying = false;
-        let noiseNode, filterNode, gainNode, subOsc;
-
-        function createNoiseBuffer(ctx) {
-            const bufferSize = ctx.sampleRate * 3;
-            const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-            const output = buffer.getChannelData(0);
-            for (let i = 0; i < bufferSize; i++) {
-                output[i] = Math.random() * 2 - 1;
-            }
-            return buffer;
-        }
-
-        document.getElementById('audioToggle').addEventListener('click', () => {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            }
-
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
-
-            if (!isPlaying) {
-                // 1. Generador de ruido de propulsión turbulenta (Jet Noise)
-                const noiseBuffer = createNoiseBuffer(audioCtx);
-                noiseNode = audioCtx.createBufferSource();
-                noiseNode.buffer = noiseBuffer;
-                noiseNode.loop = true;
-
-                // 2. Filtro de Frecuencia Pasabajo para simular el rugido grave de turbina
-                filterNode = audioCtx.createBiquadFilter();
-                filterNode.type = 'lowpass';
-                filterNode.frequency.setValueAtTime(320, audioCtx.currentTime);
-
-                // 3. Sub-oscilador de graves para el impacto de motores espacial
-                subOsc = audioCtx.createOscillator();
-                subOsc.type = 'sine';
-                subOsc.frequency.setValueAtTime(45, audioCtx.currentTime);
-
-                // 4. Control de Volumen (Master Gain)
-                gainNode = audioCtx.createGain();
-                gainNode.gain.setValueAtTime(0.01, audioCtx.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.25, audioCtx.currentTime + 1.5); // Fade in suave
-
-                // Conexiones de Audio
-                noiseNode.connect(filterNode);
-                filterNode.connect(gainNode);
-                subOsc.connect(gainNode);
-                gainNode.connect(audioCtx.destination);
-
-                noiseNode.start();
-                subOsc.start();
-
-                isPlaying = true;
-                document.getElementById('audioToggle').innerText = "🔇 DESACTIVAR SONIDO";
-            } else {
-                // Fade out suave
-                gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
-                setTimeout(() => {
-                    if (noiseNode) noiseNode.stop();
-                    if (subOsc) subOsc.stop();
-                    isPlaying = false;
-                    document.getElementById('audioToggle').innerText = "🚀 ACTIVAR PROPULSIÓN HYPER-SOUND";
-                }, 500);
-            }
-        });
-    </script>
+      }, 1000);
+    });
+  </script>
 </body>
 </html>
